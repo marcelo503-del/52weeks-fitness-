@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Road to 1000 — 12‑Month Macrocycle</title>
+<meta name="theme-color" content="#0f172a" />
+<style>
+  :root{
+    --bg:#0b1020; --panel:#0f172a; --ink:#e5e7eb; --muted:#9aa3b2;
+    --accent:#38bdf8; --accent-2:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+    --card:#111827; --chip:#1f2937; --ring:rgba(56,189,248,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:linear-gradient(180deg,#0b1020,#0a122a 40%,#0b1020);
+    font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+    color:var(--ink); line-height:1.45;
+  }
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter:saturate(1.2) blur(10px);
+    background:linear-gradient(180deg, rgba(11,16,32,.9), rgba(11,16,32,.6));
+    border-bottom:1px solid rgba(148,163,184,.15);
+  }
+  .wrap{max-width:1100px; margin:auto; padding:18px 16px}
+  h1{margin:4px 0 0; font-weight:800; letter-spacing:.2px; font-size:clamp(22px,4vw,30px)}
+  .sub{color:var(--muted); font-size:.95rem}
+  .grid{
+    display:grid; gap:14px; grid-template-columns:repeat(12,1fr);
+    align-items:end; margin-top:12px
+  }
+  .card{grid-column:span 12; background:linear-gradient(180deg,#0f172a,#0c1428); border:1px solid rgba(56,189,248,.18);
+    box-shadow:0 10px 30px rgba(2,6,23,.5); border-radius:14px; padding:16px}
+  .row{display:flex; gap:10px; flex-wrap:wrap}
+  label{display:block; font-size:.82rem; color:var(--muted); margin-bottom:6px}
+  input,select,button{
+    appearance:none; border:1px solid rgba(148,163,184,.18); background:#0b1326; color:var(--ink);
+    padding:10px 12px; border-radius:10px; outline:none; width:100%;
+  }
+  input:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 4px var(--ring)}
+  .col-3{flex:1 1 190px} .col-2{flex:1 1 150px} .col-1{flex:1 1 120px}
+  .actions{display:flex; gap:10px; flex-wrap:wrap}
+  .btn{cursor:pointer; border:1px solid rgba(56,189,248,.35); background:linear-gradient(180deg,#0a162e,#08152c);
+    padding:10px 14px; border-radius:10px; font-weight:700}
+  .btn.secondary{border-color:rgba(34,197,94,.35)}
+  .btn.print{border-color:rgba(245,158,11,.45)}
+  .btn.reset{border-color:rgba(239,68,68,.45)}
+  .chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+  .chip{background:var(--chip); color:var(--ink); border:1px solid rgba(148,163,184,.18); padding:6px 10px; border-radius:999px; font-size:.8rem}
+  .phase{margin-top:18px; border:1px solid rgba(148,163,184,.18); border-radius:14px; overflow:hidden}
+  .phase>summary{
+    list-style:none; cursor:pointer; padding:14px 16px; background:linear-gradient(180deg,#0e162a,#0b1326);
+    border-bottom:1px solid rgba(148,163,184,.12); position:relative; font-weight:700
+  }
+  .phase>summary::-webkit-details-marker{display:none}
+  .phase>summary .meta{color:var(--muted); font-weight:500; font-size:.9rem}
+  .week{border-top:1px dashed rgba(148,163,184,.18)}
+  .week>summary{list-style:none; cursor:pointer; padding:12px 16px}
+  .week>summary::-webkit-details-marker{display:none}
+  .table{width:100%; border-collapse:collapse; margin:6px 0 12px}
+  .table th,.table td{padding:10px 8px; border-bottom:1px dashed rgba(148,163,184,.18); text-align:left; vertical-align:top}
+  .pct{color:var(--accent)} .deload{color:var(--warn)} .test{color:var(--accent-2)} .danger{color:var(--danger)}
+  footer{color:var(--muted); text-align:center; padding:24px 12px}
+  .note{font-size:.9rem; color:var(--muted)}
+  .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background:#0b1326; border:1px solid rgba(148,163,184,.25); padding:2px 6px; border-radius:6px}
+  @media (min-width:840px){
+    .card{padding:18px}
+    .grid .card.span-6{grid-column:span 6}
+    .grid .card.span-12{grid-column:span 12}
+  }
+  @media print{
+    header{position:static; background:#fff; color:#000; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    body{background:#fff; color:#000}
+    .card, .phase, .week, .btn{box-shadow:none}
+    .btn{display:none}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Road to 1000 — 12‑Month Macrocycle</h1>
+    <div class="sub">Built for your schedule: strength + Army PT + hybrid conditioning. Edit your 1RMs and it recalculates every week.</div>
+    <div class="grid">
+      <div class="card span-6">
+        <div class="row">
+          <div class="col-2">
+            <label for="squat1rm">Squat 1RM (lb)</label>
+            <input id="squat1rm" type="number" inputmode="decimal" min="45" step="5" />
+          </div>
+          <div class="col-2">
+            <label for="bench1rm">Bench 1RM (lb)</label>
+            <input id="bench1rm" type="number" inputmode="decimal" min="45" step="5" />
+          </div>
+          <div class="col-2">
+            <label for="dead1rm">Deadlift 1RM (lb)</label>
+            <input id="dead1rm" type="number" inputmode="decimal" min="45" step="5" />
+          </div>
+          <div class="col-1">
+            <label for="roundTo">Round to</label>
+            <select id="roundTo">
+              <option value="5">5 lb</option>
+              <option value="2.5">2.5 lb</option>
+              <option value="1">1 lb</option>
+            </select>
+          </div>
+          <div class="col-2">
+            <label for="startWeek">Start on week #</label>
+            <input id="startWeek" type="number" min="1" max="52" step="1" value="1"/>
+          </div>
+        </div>
+        <div class="row" style="margin-top:10px">
+          <div class="actions">
+            <button class="btn" id="recalc">Recalculate Plan</button>
+            <button class="btn secondary" id="exportJson">Export JSON</button>
+            <button class="btn print" id="printBtn">Print</button>
+            <button class="btn reset" id="resetBtn">Reset to Defaults</button>
+          </div>
+        </div>
+        <div class="chips">
+          <div class="chip">Weekly Split: Mon Lower A • Tue Upper A • Wed PT/Condition • Thu Lower B • Fri Upper B • Sat Hybrid/Ruck/Swim • Sun Rest</div>
+          <div class="chip">Deload every 4th week</div>
+          <div class="chip">Peak & Test around Weeks 49–50</div>
+        </div>
+      </div>
+      <div class="card span-6">
+        <strong>Accessory Themes by Phase</strong>
+        <ul style="margin:8px 0 0 18px; padding:0">
+          <li><b>Hypertrophy (W1–16):</b> Lunges, RDLs, rows, OHP, dips, core. 10–12 reps, short rest.</li>
+          <li><b>Strength (W17–32):</b> Pause squats, close‑grip bench, block pulls, weighted pull‑ups.</li>
+          <li><b>Intensification (W33–44):</b> Speed work, 2–3 rep heavy sets, technique singles @ 85–90%.</li>
+          <li><b>Peak & Test (W45–52):</b> Heavy singles, taper, mock meet, then recovery.</li>
+        </ul>
+        <div class="note" style="margin-top:8px">Pre‑workout: optional citrulline (6–8 g) or beetroot on PT/endurance days. Daily: creatine 5 g, protein, omega‑3, magnesium+B6.</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="planRoot" style="padding-top:10px"></main>
+
+<footer>
+  Built for Marcelo • Saves automatically • Tip: tap a week to expand. Press <span class="kbd">Ctrl/Cmd + P</span> to print.
+</footer>
+
+<script>
+(function(){
+  // ---- UTIL ----
+  const $ = sel => document.querySelector(sel);
+  const roundTo = (x, step)=> Math.round(x/step)*step;
+  const pct = (n)=> (n*100).toFixed(1).replace(/\.0$/,'') + '%';
+  const lbs = (n)=> `${n} lb`;
+
+  // ---- DEFAULTS (from you) ----
+  const defaults = {
+    squat: 290,
+    bench: 265,
+    dead: 380,
+    round: 5,
+    startWeek: 1
+  };
+
+  // ---- PHASE / MESO DESIGN ----
+  // Each block is 4 weeks: 3 build + 1 deload
+  // We’ll make 13 blocks (52 weeks)
+  const blocks = [
+    // Phase 1: Hypertrophy & Base (Weeks 1–16) — 4 blocks
+    {phase:'Hypertrophy & Base', meso:'Volume A',     scheme:{sq:[['4x8',.65],['4x8',.70],['4x8',.725],['3x6',.60,'deload']], be:[['4x8',.65],['4x8',.70],['4x8',.725],['3x6',.60,'deload']], dl:[['3x6',.65],['3x6',.70],['3x6',.725],['2x5',.60,'deload']]}},
+    {phase:'Hypertrophy & Base', meso:'Volume B',     scheme:{sq:[['4x6',.70],['4x6',.725],['5x6',.75],['3x5',.60,'deload']], be:[['4x6',.70],['4x6',.725],['5x6',.75],['3x5',.60,'deload']], dl:[['4x5',.70],['4x5',.725],['4x5',.75],['3x4',.60,'deload']]}},
+    {phase:'Hypertrophy & Base', meso:'Volume C',     scheme:{sq:[['5x6',.72],['5x6',.75],['4x6',.77],['3x5',.60,'deload']], be:[['5x6',.72],['5x6',.75],['4x6',.77],['3x5',.60,'deload']], dl:[['4x5',.72],['4x5',.75],['4x5',.77],['3x4',.60,'deload']]}},
+    {phase:'Hypertrophy & Base', meso:'Volume D',     scheme:{sq:[['4x8',.68],['4x8',.72],['4x8',.75],['3x6',.60,'deload']], be:[['4x8',.68],['4x8',.72],['4x8',.75],['3x6',.60,'deload']], dl:[['3x6',.68],['3x6',.72],['3x6',.75],['2x5',.60,'deload']]}},
+
+    // Phase 2: Strength (Weeks 17–32) — 4 blocks
+    {phase:'Strength',           meso:'5x5 Base',     scheme:{sq:[['5x5',.75],['5x5',.80],['5x5',.825],['3x5',.65,'deload']], be:[['5x5',.75],['5x5',.80],['5x5',.825],['3x5',.65,'deload']], dl:[['4x4',.75],['4x4',.80],['4x4',.825],['3x3',.65,'deload']]}},
+    {phase:'Strength',           meso:'5x5 Plus',     scheme:{sq:[['5x4',.80],['5x4',.825],['5x3',.85],['3x4',.65,'deload']], be:[['5x4',.80],['5x4',.825],['5x3',.85],['3x4',.65,'deload']], dl:[['4x3',.80],['4x3',.825],['4x3',.85],['3x3',.65,'deload']]}},
+    {phase:'Strength',           meso:'Heavy Technique',scheme:{sq:[['4x4',.80],['4x3',.85],['4x3',.87],['3x3',.65,'deload']], be:[['4x4',.80],['4x3',.85],['4x3',.87],['3x3',.65,'deload']], dl:[['3x3',.80],['3x3',.85],['3x3',.87],['3x2',.65,'deload']]}},
+    {phase:'Strength',           meso:'3–5 Power',    scheme:{sq:[['5x3',.82],['4x3',.85],['4x2',.88],['3x3',.65,'deload']], be:[['5x3',.82],['4x3',.85],['4x2',.88],['3x3',.65,'deload']], dl:[['4x2',.82],['4x2',.86],['3x2',.90],['3x2',.65,'deload']]}},
+
+    // Phase 3: Intensification (Weeks 33–44) — 3 blocks
+    {phase:'Intensification',    meso:'Triples',      scheme:{sq:[['4x3',.85],['4x3',.875],['4x2',.90],['3x2',.65,'deload']], be:[['4x3',.85],['4x3',.875],['4x2',.90],['3x2',.65,'deload']], dl:[['3x3',.85],['3x2',.88],['3x2',.90],['3x2',.65,'deload']]}},
+    {phase:'Intensification',    meso:'Doubles',      scheme:{sq:[['3x3',.87],['4x2',.90],['3x2',.92],['3x2',.67,'deload']], be:[['3x3',.87],['4x2',.90],['3x2',.92],['3x2',.67,'deload']], dl:[['3x2',.87],['3x2',.90],['2x2',.92],['3x2',.67,'deload']]}},
+    {phase:'Intensification',    meso:'Singles Prep', scheme:{sq:[['4x2',.88],['3x2',.90],['3x1',.92],['3x2',.67,'deload']], be:[['4x2',.88],['3x2',.90],['3x1',.92],['3x2',.67,'deload']], dl:[['3x2',.88],['3x2',.90],['3x1',.92],['3x2',.67,'deload']]}},
+
+    // Phase 4: Peak & Test (Weeks 45–52) — 2 blocks
+    {phase:'Peak',               meso:'Heavy Singles',scheme:{sq:[['3x2',.90],['4x1',.925],['2x1',.95],['3x3',.70,'deload']], be:[['3x2',.90],['4x1',.925],['2x1',.95],['3x3',.70,'deload']], dl:[['3x2',.90],['3x1',.925],['1-2x1',.95],['3x3',.70,'deload']]}},
+    {phase:'Test & Recover',     meso:'Mock Meet + Reset', scheme:{sq:[['Warmups→ Test',1.00,'test'],['Recovery',.60],['GPP/Technique',.55],['New Cycle Setup',.50]], be:[['Warmups→ Test',1.00,'test'],['Recovery',.60],['GPP/Technique',.55],['New Cycle Setup',.50]], dl:[['Warmups→ Test',1.00,'test'],['Recovery',.60],['GPP/Technique',.55],['New Cycle Setup',.50]]}},
+  ];
+
+  // ---- ACCESSORY SUGGESTIONS BY PHASE ----
+  const accByPhase = {
+    'Hypertrophy & Base': ['Lunges 3x12', 'RDL 3x10', 'Rows 4x10', 'OHP 4x8', 'Dips 3xAMRAP', 'Core 8–12min'],
+    'Strength': ['Pause Squats 3x3', 'Close‑Grip Bench 3x5', 'Block/Deficit Pulls 3x3', 'Weighted Pull‑ups 4x6', 'Face Pulls 3x15'],
+    'Intensification': ['Speed Squats 6x2 @60%', '2‑ct Paused Bench 4x3', 'Hip Thrusts 3x5', 'Rows 4x8', 'Core 6–8min'],
+    'Peak': ['Very light accessories, technique only'],
+    'Test & Recover': ['Walks, mobility, easy rows/pushups']
+  };
+
+  // ---- RENDER ----
+  const state = {
+    squat: +localStorage.getItem('squat1rm') || defaults.squat,
+    bench: +localStorage.getItem('bench1rm') || defaults.bench,
+    dead:  +localStorage.getItem('dead1rm')  || defaults.dead,
+    round: +localStorage.getItem('roundTo')  || defaults.round,
+    startWeek: +localStorage.getItem('startWeek') || defaults.startWeek,
+  };
+
+  // Fill inputs
+  $('#squat1rm').value = state.squat;
+  $('#bench1rm').value = state.bench;
+  $('#dead1rm').value  = state.dead;
+  $('#roundTo').value  = String(state.round);
+  $('#startWeek').value= String(state.startWeek);
+
+  function saveState(){
+    localStorage.setItem('squat1rm', $('#squat1rm').value);
+    localStorage.setItem('bench1rm', $('#bench1rm').value);
+    localStorage.setItem('dead1rm',  $('#dead1rm').value);
+    localStorage.setItem('roundTo',  $('#roundTo').value);
+    localStorage.setItem('startWeek',$('#startWeek').value);
+  }
+
+  function calcWeight(orm, mult, step){
+    if (typeof mult !== 'number') return null;
+    return roundTo(orm * mult, step);
+  }
+
+  function weekLabel(globalIndex, startWeek){
+    const n = startWeek - 1 + globalIndex + 1;
+    return `Week ${n}`;
+  }
+
+  function render(){
+    const s = {
+      sq: +$('#squat1rm').value || defaults.squat,
+      be: +$('#bench1rm').value || defaults.bench,
+      dl: +$('#dead1rm').value  || defaults.dead,
+    };
+    const step = +$('#roundTo').value || defaults.round;
+    const startW = +$('#startWeek').value || 1;
+
+    const root = $('#planRoot');
+    root.innerHTML = '';
+
+    let globalWeek = 0;
+
+    blocks.forEach((blk, bi)=>{
+      const phaseEl = document.createElement('details');
+      phaseEl.className = 'phase';
+      phaseEl.open = (bi===0); // open first by default
+
+      const totalWeeks = 4;
+      const header = document.createElement('summary');
+      const phaseWeeksStart = weekLabel(globalWeek, startW).replace(/Week /,'');
+      const phaseWeeksEnd   = weekLabel(globalWeek + totalWeeks -1, startW).replace(/Week /,'');
+      header.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+          <div>
+            <div style="font-size:1.05rem">${blk.phase} <span style="opacity:.85">—</span> ${blk.meso}</div>
+            <div class="meta">Covers ${phaseWeeksStart}–${phaseWeeksEnd}</div>
+          </div>
+          <div class="chips"><span class="chip">${accByPhase[blk.phase]?.[0] || 'Smart accessories'}</span><span class="chip">${accByPhase[blk.phase]?.[1] || ''}</span></div>
+        </div>`;
+      phaseEl.appendChild(header);
+
+      // 4 micro weeks inside each block
+      for(let w=0; w<4; w++){
+        const wkEl = document.createElement('details');
+        wkEl.className = 'week';
+        wkEl.open = (bi===0 && w===0);
+        const isDeload = blk.scheme.sq[w][2]==='deload' || blk.scheme.be[w][2]==='deload' || blk.scheme.dl[w][2]==='deload';
+        const isTest   = blk.scheme.sq[w][2]==='test'   || blk.scheme.be[w][2]==='test'   || blk.scheme.dl[w][2]==='test';
+
+        const title = `${weekLabel(globalWeek, startW)} — ${isTest ? '<span class="test">TEST</span>' : isDeload ? '<span class="deload">DELOAD</span>' : '<span class="pct">Build</span>'}`;
+        wkEl.innerHTML = `<summary>${title}</summary>`;
+
+        const table = document.createElement('table');
+        table.className = 'table';
+        table.innerHTML = `
+          <thead><tr><th>Lift</th><th>Prescription</th><th>Target Weight</th><th>Notes</th></tr></thead>
+          <tbody></tbody>
+        `;
+        const tb = table.querySelector('tbody');
+
+        [['Squat','sq'],['Bench','be'],['Deadlift','dl']].forEach(([name,key])=>{
+          const [presc, mult, flag] = blk.scheme[key][w];
+          const isWTest = flag==='test';
+          const isWDeload = flag==='deload';
+          let weight = calcWeight(s[key], mult, step);
+          let notes = '';
+
+          if(isWTest){
+            // attempt selector guidance
+            const a1 = roundTo(s[key]*0.92, step);
+            const a2 = roundTo(s[key]*0.97, step);
+            const a3 = roundTo(s[key]*1.00, step);
+            weight = `${a1} / ${a2} / ${a3}`;
+            notes = 'Attempts: conservative opener ≈92%, 2nd ≈97%, 3rd ≈100% if bar speed is good.';
+          } else if(isWDeload){
+            notes = 'Keep RIR 3+; move crisp; cut accessories by ~50%.';
+          } else {
+            notes = 'RIR 1–2 on final set; maintain form.';
+          }
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${name}</strong></td>
+            <td>${presc} <span class="pct">@ ${typeof mult==='number' ? pct(mult) : ''}</span></td>
+            <td>${typeof weight==='number' ? lbs(weight) : weight}</td>
+            <td>${notes}</td>
+          `;
+          tb.appendChild(tr);
+        });
+
+        // Weekly split & accessories
+        const accList = (accByPhase[blk.phase]||[]).slice(0,5).map(x=>`<li>${x}</li>`).join('');
+        const split = `
+          <div class="note">
+            <strong>Weekly Split:</strong> Mon Lower A • Tue Upper A • Wed PT/Condition • Thu Lower B • Fri Upper B • Sat Hybrid/Ruck/Swim • Sun Rest
+            <br/><strong>Accessory Focus:</strong>
+            <ul style="margin:.4rem 0 0 1.2rem">${accList}</ul>
+          </div>`;
+
+        wkEl.appendChild(table);
+        wkEl.insertAdjacentHTML('beforeend', split);
+
+        phaseEl.appendChild(wkEl);
+        globalWeek++;
+      }
+
+      root.appendChild(phaseEl);
+    });
+  }
+
+  // initial render
+  render();
+
+  // events
+  $('#recalc').addEventListener('click', ()=>{ saveState(); render(); });
+  $('#exportJson').addEventListener('click', ()=>{
+    const blob = new Blob([JSON.stringify({
+      squat:+$('#squat1rm').value, bench:+$('#bench1rm').value, dead:+$('#dead1rm').value,
+      round:+$('#roundTo').value, startWeek:+$('#startWeek').value,
+      design:'12-month 1000-lb macrocycle (3 phases + peak/test, 13x4wk blocks)',
+      timestamp:new Date().toISOString()
+    }, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'macrocycle-1000lb.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  $('#printBtn').addEventListener('click', ()=> window.print());
+  $('#resetBtn').addEventListener('click', ()=>{
+    $('#squat1rm').value = 290;
+    $('#bench1rm').value = 265;
+    $('#dead1rm').value  = 380;
+    $('#roundTo').value  = '5';
+    $('#startWeek').value= '1';
+    saveState(); render();
+  });
+
+  // optional: register service worker for offline
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  }
+})();
+</script>
+</body>
+</html>
